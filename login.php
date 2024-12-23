@@ -3,8 +3,12 @@ require 'db.php';
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+    $username = trim($_POST['username']);
+    $password = trim($_POST['password']);
+
+    if (empty($username) || empty($password)) {
+        die("아이디와 비밀번호를 입력해주세요.");
+    }
 
     $stmt = $conn->prepare("SELECT id, password FROM users WHERE username = ?");
     $stmt->bind_param("s", $username);
@@ -17,13 +21,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (password_verify($password, $hashed_password)) {
             $_SESSION['user_id'] = $id;
-            echo "로그인 성공!";
             header("Location: index.php");
+            exit();
         } else {
-            echo "비밀번호가 틀립니다.";
+            echo "아이디 또는 비밀번호가 올바르지 않습니다.";
         }
     } else {
-        echo "사용자가 존재하지 않습니다.";
+        echo "아이디 또는 비밀번호가 올바르지 않습니다.";
     }
 
     $stmt->close();
