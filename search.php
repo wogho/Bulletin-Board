@@ -8,7 +8,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 while ($row = $result->fetch_assoc()) {
-    echo "<h2><a href='view_post.php?id=" . $row['id'] . "'>" . $row['title'] . "</a></h2>";
+    echo "<h2><a href='view_post.php?id=" . htmlspecialchars($row['id']) . "'>" . htmlspecialchars($row['title']) . "</a></h2>";
 }
 
 $stmt->close();
